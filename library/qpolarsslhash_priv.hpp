@@ -88,6 +88,10 @@ public:
         return itype != POLARSSL_MD_NONE;
     }
 
+    auto            info()const -> const md_info_t* {
+        return md_info_from_type(itype);
+    }
+
     int             start() {
         return md_starts(context());
     }
