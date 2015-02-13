@@ -12,11 +12,13 @@ win32:DEFINES += QPOLARSSL_EXPORT
 
 
 SOURCES  += \
-    qpolarsslhash.cpp
+    qpolarsslhash.cpp \
+    qpolarsslcipher.cpp
 
 HEADERS  += \
     qpolarssltypes.hpp \
     ../include/qpolarssl/qpolarsslbase.hpp \
-    ../include/qpolarssl/qpolarsslhash.hpp
+    ../include/qpolarssl/qpolarsslhash.hpp \
+    ../include/qpolarssl/qpolarsslcipher.hpp
 
 
