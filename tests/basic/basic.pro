@@ -10,7 +10,8 @@ INCLUDEPATH += $$PRJDIR/3rdparty/Catch/single_include
 
 SOURCES     += main.cpp \
     text-generator.cpp \
-    hashes.cpp
+    hashes.cpp \
+    ciphers.cpp
 
 HEADERS     += \
     text-generator.hpp
