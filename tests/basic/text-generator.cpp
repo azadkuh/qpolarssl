@@ -51,8 +51,12 @@ filePath() {
 
 QByteArray
 readFromFile(const QString &fileName) {
-    QFile f(QFileInfo(QCoreApplication::applicationDirPath(),
-                      fileName).absoluteFilePath());
+    QString filePath = fileName;
+    if ( !fileName.startsWith(":/") )
+        filePath = QFileInfo(QCoreApplication::applicationDirPath(),
+                             fileName).absoluteFilePath();
+
+    QFile f(filePath);
 
     if ( f.open(QFile::ReadOnly) ) {
         return f.readAll();
