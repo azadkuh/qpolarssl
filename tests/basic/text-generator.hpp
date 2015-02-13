@@ -8,6 +8,9 @@ namespace test {
 auto     createSourceData() -> QByteArray;
 int      createSourceFile(const QByteArray& src);
 auto     filePath() -> QString;
+
+bool     writeToFile(const QString& fileName, const QByteArray& data);
+auto     readFromFile(const QString& fileName) -> QByteArray;
 ///////////////////////////////////////////////////////////////////////////////
 } // namespace test
 ///////////////////////////////////////////////////////////////////////////////

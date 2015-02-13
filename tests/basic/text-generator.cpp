@@ -49,6 +49,31 @@ filePath() {
             .absoluteFilePath();
 }
 
+QByteArray
+readFromFile(const QString &fileName) {
+    QFile f(QFileInfo(QCoreApplication::applicationDirPath(),
+                      fileName).absoluteFilePath());
+
+    if ( f.open(QFile::ReadOnly) ) {
+        return f.readAll();
+    }
+
+    return QByteArray();
+}
+
+bool
+writeToFile(const QString& fileName, const QByteArray& data) {
+    QFile f(QFileInfo(QCoreApplication::applicationDirPath(),
+                      fileName).absoluteFilePath());
+
+    if ( f.open(QFile::WriteOnly) ) {
+        f.write( data );
+        return true;
+    }
+
+    return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 } // namespace test
 ///////////////////////////////////////////////////////////////////////////////
