@@ -12,10 +12,13 @@ SOURCES     += main.cpp \
     text-generator.cpp \
     hashes.cpp \
     ciphers.cpp \
-    random.cpp
+    random.cpp \
+    pki.cpp
 
 HEADERS     += \
     text-generator.hpp
+
+RESOURCES   += resources.qrc
 
 LIBS        += -lqpolarssl
 

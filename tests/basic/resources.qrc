@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="prikey">key-private.pem</file>
+        <file alias="pubkey">key-public.pem</file>
+    </qresource>
+</RCC>
