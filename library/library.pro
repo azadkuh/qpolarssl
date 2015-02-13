@@ -13,12 +13,15 @@ win32:DEFINES += QPOLARSSL_EXPORT
 
 SOURCES  += \
     qpolarsslhash.cpp \
-    qpolarsslcipher.cpp
+    qpolarsslcipher.cpp \
+    qpolarsslrandom.cpp
 
 HEADERS  += \
     qpolarssltypes.hpp \
     ../include/qpolarssl/qpolarsslbase.hpp \
     ../include/qpolarssl/qpolarsslhash.hpp \
-    ../include/qpolarssl/qpolarsslcipher.hpp
+    ../include/qpolarssl/qpolarsslcipher.hpp \
+    ../include/qpolarssl/qpolarsslrandom.hpp
+
 
 
