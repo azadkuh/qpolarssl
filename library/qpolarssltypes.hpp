@@ -14,6 +14,7 @@
 #include "qpolarsslbase.hpp"
 #include <polarssl/md.h>
 #include <polarssl/cipher.h>
+#include <polarssl/pk.h>
 ///////////////////////////////////////////////////////////////////////////////
 namespace qpolarssl {
 ///////////////////////////////////////////////////////////////////////////////
@@ -451,6 +452,68 @@ public:
         }
 
         return TPadding::NONE;
+    }
+
+    static auto     toPolar(TPki p) -> pk_type_t {
+        switch ( p ) {
+        case TPki::NONE:
+            return POLARSSL_PK_NONE;
+            break;
+        case TPki::RSA:
+            return POLARSSL_PK_RSA;
+            break;
+        case TPki::ECKEY:
+            return POLARSSL_PK_ECKEY;
+            break;
+        case TPki::ECKEY_DH:
+            return POLARSSL_PK_ECKEY_DH;
+            break;
+        case TPki::ECDSA:
+            return POLARSSL_PK_ECDSA;
+            break;
+        case TPki::RSA_ALT:
+            return POLARSSL_PK_RSA_ALT;
+            break;
+        case TPki::RSASSA_PSS:
+            return POLARSSL_PK_RSASSA_PSS;
+            break;
+
+        default:
+            break;
+        }
+
+        return POLARSSL_PK_NONE;
+    }
+
+    static auto     fromPolar(pk_type_t p) -> TPki {
+        switch ( p ) {
+        case POLARSSL_PK_NONE:
+            return TPki::NONE;
+            break;
+        case POLARSSL_PK_RSA:
+            return TPki::RSA;
+            break;
+        case POLARSSL_PK_ECKEY:
+            return TPki::ECKEY;
+            break;
+        case POLARSSL_PK_ECKEY_DH:
+            return TPki::ECKEY_DH;
+            break;
+        case POLARSSL_PK_ECDSA:
+            return TPki::ECDSA;
+            break;
+        case POLARSSL_PK_RSA_ALT:
+            return TPki::RSA_ALT;
+            break;
+        case POLARSSL_PK_RSASSA_PSS:
+            return TPki::RSASSA_PSS;
+            break;
+
+        default:
+            break;
+        }
+
+        return TPki::NONE;
     }
 };
 

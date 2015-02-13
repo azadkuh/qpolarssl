@@ -105,6 +105,22 @@ enum class TPadding {
     NONE,             ///< never pad (full blocks only)
 };
 
+
+/** all possible public key types of polarssl.
+ * at the moment, RSA is included in build by default.
+ * @warning polarssl is highly configurable, please check
+ *  the polarssl_config.h for more information and available (included) modules.
+ */
+enum class TPki {
+    NONE,
+    RSA,
+    ECKEY,
+    ECKEY_DH,
+    ECDSA,
+    RSA_ALT,
+    RSASSA_PSS
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 // forward declarations
 class   Hash;
