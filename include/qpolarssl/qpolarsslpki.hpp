@@ -11,10 +11,7 @@
 #ifndef QPOLARSSL_PKI_HPP
 #define QPOLARSSL_PKI_HPP
 
-#include <QFile>
-#include "polarssl/pk.h"
-#include "qpolarsslhash.hpp"
-#include "qpolarsslrandom.hpp"
+#include "qpolarsslbase.hpp"
 ///////////////////////////////////////////////////////////////////////////////
 namespace qpolarssl {
 ///////////////////////////////////////////////////////////////////////////////
