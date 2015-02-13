@@ -11,8 +11,12 @@ include(polarssl.pri)
 win32:DEFINES += QPOLARSSL_EXPORT
 
 
-SOURCES  +=
+SOURCES  += \
+    qpolarsslhash.cpp
 
-HEADERS  +=
+HEADERS  += \
+    qpolarssltypes.hpp \
+    ../include/qpolarssl/qpolarsslbase.hpp \
+    ../include/qpolarssl/qpolarsslhash.hpp
 
 
