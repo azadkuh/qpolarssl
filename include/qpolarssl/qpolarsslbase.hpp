@@ -17,9 +17,10 @@
 namespace qpolarssl {
 ///////////////////////////////////////////////////////////////////////////////
 
-/// all possible supported hash (message-digest) types in polarssl.
-/// @warning polarssl is highly configurable, please check
-///  the polarssl_config.h for more information and available (included) modules.
+/** all possible supported hash (message-digest) types in polarssl.
+ *  @warning polarssl is highly configurable, please check
+ *   the polarssl_config.h for more information and available (included) modules.
+ */
 enum class THash {
     NONE,           ///< no (invalid) hash
     MD2,            ///< optional
@@ -34,6 +35,75 @@ enum class THash {
 };
 
 
+/** all possible supported cipher types in polarssl.
+ * by default AES, AESNI and DES are included in build.
+ * @warning polarssl is highly configurable, please check
+ *  the polarssl_config.h for more information and available (included) modules.
+ */
+enum class TCipher {
+    NONE,
+    AES_128_ECB,
+    AES_192_ECB,
+    AES_256_ECB,
+    AES_128_CBC,
+    AES_192_CBC,
+    AES_256_CBC,
+    AES_128_CFB128,
+    AES_192_CFB128,
+    AES_256_CFB128,
+    AES_128_CTR,
+    AES_192_CTR,
+    AES_256_CTR,
+    AES_128_GCM,
+    AES_192_GCM,
+    AES_256_GCM,
+    CAMELLIA_128_ECB,
+    CAMELLIA_192_ECB,
+    CAMELLIA_256_ECB,
+    CAMELLIA_128_CBC,
+    CAMELLIA_192_CBC,
+    CAMELLIA_256_CBC,
+    CAMELLIA_128_CFB128,
+    CAMELLIA_192_CFB128,
+    CAMELLIA_256_CFB128,
+    CAMELLIA_128_CTR,
+    CAMELLIA_192_CTR,
+    CAMELLIA_256_CTR,
+    CAMELLIA_128_GCM,
+    CAMELLIA_192_GCM,
+    CAMELLIA_256_GCM,
+    DES_ECB,
+    DES_CBC,
+    DES_EDE_ECB,
+    DES_EDE_CBC,
+    DES_EDE3_ECB,
+    DES_EDE3_CBC,
+    BLOWFISH_ECB,
+    BLOWFISH_CBC,
+    BLOWFISH_CFB64,
+    BLOWFISH_CTR,
+    ARC4_128,
+    AES_128_CCM,
+    AES_192_CCM,
+    AES_256_CCM,
+    CAMELLIA_128_CCM,
+    CAMELLIA_192_CCM,
+    CAMELLIA_256_CCM
+};
+
+
+/** all possible paddings of polarssl.
+ *  by default PKCS7 has been included in build.
+ * @warning polarssl is highly configurable, please check
+ *  the polarssl_config.h for more information and available (included) modules.
+ */
+enum class TPadding {
+    PKCS7 = 0,        ///< PKCS7 padding (default)
+    ONE_AND_ZEROS,    ///< ISO/IEC 7816-4 padding
+    ZEROS_AND_LEN,    ///< ANSI X.923 padding
+    ZEROS,            ///< zero padding (not reversible!)
+    NONE,             ///< never pad (full blocks only)
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // forward declarations

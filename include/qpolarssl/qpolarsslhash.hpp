@@ -17,7 +17,7 @@ namespace qpolarssl {
 ///////////////////////////////////////////////////////////////////////////////
 /** a wrapper class on polarssl hash (message-digest) functions.
  * by this class, performing hash/hmac on data by polarssl
- *  would be quite simple as:
+ *  would be quite simple:
  * @code
     // psuedo code (no error checking for simplicity)
 
