@@ -14,6 +14,7 @@ SOURCES     += \
     $$POLARSSLDIR/library/sha512.c \
     $$POLARSSLDIR/library/md_wrap.c \
     $$POLARSSLDIR/library/md.c \
+    $$POLARSSLDIR/library/blowfish.c \
     $$POLARSSLDIR/library/aes.c \
     $$POLARSSLDIR/library/aesni.c \
     $$POLARSSLDIR/library/des.c \

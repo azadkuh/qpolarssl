@@ -22,7 +22,7 @@ namespace qpolarssl {
 
     auto randomData = rnd(20); // random data
 
-    // in combination with polarssl::Cipher
+    // in combination with qpolarssl::Cipher
     qpolarssl::Cipher cipher("AES-128-CBC");
     cipher.setEncryptionKey(key); // your key
     cipher.setIv(rnd(16));
