@@ -15,7 +15,7 @@
 ## About
 `QPolarSSL` is a thin wrapper (`Qt5` / `c++11`) around [polarssl](https://github.com/polarssl/polarssl) library who implements a wide range of cryptographic algorithms including hashing (message digest), deterministic random bits generator (drbg), ciphers (symmetric) and public-key (asymmetric) infrastructure.
 
-thanks to efficiency of `polarssl`, the `QPolarSSL` is less than `200KB` when compiled as a dynamic library. `polarssl` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [polarssl_config.h](./library/polarssl_config.h) and [polarssl.pri](./library/polarssl).
+thanks to efficiency of `polarssl`, the `QPolarSSL` is less than `200KB` when compiled as a dynamic library. `polarssl` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [polarssl_config.h](./library/polarssl_config.h) and [polarssl.pri](./library/polarssl.pri).
 
 tested platforms:
 
