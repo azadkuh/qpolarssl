@@ -18,7 +18,6 @@ SOURCES     += \
     $$POLARSSLDIR/library/aes.c \
     $$POLARSSLDIR/library/aesni.c \
     $$POLARSSLDIR/library/des.c \
-    $$POLARSSLDIR/library/padlock.c \
     $$POLARSSLDIR/library/cipher_wrap.c \
     $$POLARSSLDIR/library/cipher.c \
     $$POLARSSLDIR/library/entropy.c \
