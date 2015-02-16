@@ -95,6 +95,8 @@ public:
         if ( nRet != 0 )
             qDebug("pk_parse_key() failed. error: -0x%X", -nRet);
 
+        itype = pk_get_type(context());
+
         return nRet;
     }
 
@@ -107,6 +109,8 @@ public:
                                        );
         if ( nRet != 0 )
             qDebug("pk_parse_public_key() failed. error: -0x%X", -nRet);
+
+        itype = pk_get_type(context());
 
         return nRet;
     }

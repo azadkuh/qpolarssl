@@ -21,6 +21,7 @@ TEST_CASE("polarssl::Pki test", "[pki][sign]") {
     SECTION("sign & verify w/ polarssl") {
         qpolarssl::Pki pki;
         REQUIRE( (pki.parseKeyFrom(priPath)== 0) );
+        REQUIRE( pki.isValid() );
 
         const auto polarsslSignature = pki.sign(sourceData, qpolarssl::THash::SHA1);
         INFO("polarssl signature size");
