@@ -31,8 +31,8 @@ TEST_CASE("polarssl::random benchmark", "[rnd][benchmark]") {
            duration
            );
 
-    constexpr size_t KBufferSize = 512;
-    constexpr size_t KIteration  = 128 * 1024;
+    const size_t KBufferSize = 512;
+    const size_t KIteration  = 128 * 1024;
     uint8_t data1[KBufferSize] = {0};
     uint8_t data2[KBufferSize] = {0};
 

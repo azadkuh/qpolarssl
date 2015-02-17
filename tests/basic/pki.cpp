@@ -41,6 +41,7 @@ TEST_CASE("polarssl::Pki test", "[pki][sign]") {
         CHECK( (nRet == 0) );
     }
 
+#if defined(Q_OS_LINUX)  ||  defined(Q_OS_OSX)
     SECTION("sign w/ openssl, verify w/ polarssl") {
         test::createSourceFile(sourceData);
         auto priKeyData  = test::readFromFile(priPath);
@@ -57,19 +58,18 @@ TEST_CASE("polarssl::Pki test", "[pki][sign]") {
                << test::filePath();
         stream.flush();
         test::writeToFile("sample.sh", command.toUtf8());
-
         QProcess::execute("/bin/bash", QStringList() << "sample.sh");
         auto opensslSignature = test::readFromFile("openssl.sig");
 
         INFO("signature file from openssl");
         REQUIRE( (opensslSignature.length() > 64 ) );
-
         qpolarssl::Pki pki;
         REQUIRE( (pki.parseKeyFrom(priPath) == 0) );
         int nRet = pki.verify(sourceData, opensslSignature, qpolarssl::THash::SHA1);
         INFO("verify openssl: " << nRet);
         REQUIRE( (nRet == 0) );
     }
+#endif
 
     SECTION("encrypt & decrypt w/ polarssl") {
         const auto hash = qpolarssl::Hash::hash(sourceData, "SHA1");
