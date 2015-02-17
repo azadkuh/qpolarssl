@@ -20,7 +20,7 @@ namespace qpolarssl {
     // psuedo code (no error checking for simplicity)
  * @endcode
  */
-class Pki
+class QPOLARSSL_API Pki
 {
 public:
     /// constructs a Pki instance, actual initialization will be done by key loading.

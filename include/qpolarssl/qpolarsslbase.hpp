@@ -138,9 +138,12 @@ class   Pki;
 #ifdef Q_OS_WIN
 #   if defined(QPOLARSSL_EXPORT)
 #       define QPOLARSSL_API __declspec(dllexport)
+#   elif defined(QPOLARSSL_STATIC)
+#		define QPOLARSSL_API
 #   else
 #       define QPOLARSSL_API __declspec(dllimport)
 #   endif
+#include <stdint.h>
 #else
 #   define QPOLARSSL_API
 #endif
