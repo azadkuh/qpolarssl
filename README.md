@@ -21,7 +21,7 @@ tested platforms:
 
  * Ubuntu 14.04 (64bit, gcc 4.8), Ubuntu 14.10 (32bit gcc 4.8)
  * OSX (10.9 / 10.10, cland 3.5)
- * Windows 7 (64bit - Visual Studio 2005)
+ * Windows 7 (64bit - Visual Studio 2013)
 
 [TOC](#table-of-contents)
 
