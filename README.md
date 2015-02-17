@@ -19,8 +19,9 @@ thanks to efficiency of `polarssl` aka `mbed TLS`, the `QPolarSSL` is less than 
 
 tested platforms:
 
- * Ubuntu 14.04 (64bit), Ubuntu 14.10 (32bit)
- * OSX (10.9 / 10.10)
+ * Ubuntu 14.04 (64bit, gcc 4.8), Ubuntu 14.10 (32bit gcc 4.8)
+ * OSX (10.9 / 10.10, cland 3.5)
+ * Windows 7 (64bit - Visual Studio 2005)
 
 [TOC](#table-of-contents)
 
