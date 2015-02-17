@@ -174,9 +174,6 @@ TEST_CASE("polarssl::AES speed test", "[cipher][benchmark]") {
         md5Duration += std::chrono::duration_cast<std::chrono::nanoseconds>(
                            end - start).count();
 
-        cipherEnc.reset();
-        cipherDec.reset();
-
         REQUIRE( (expectedMd5 == sourceMd5) );
     }
 

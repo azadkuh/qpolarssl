@@ -139,7 +139,7 @@ class   Pki;
 #   if defined(QPOLARSSL_EXPORT)
 #       define QPOLARSSL_API __declspec(dllexport)
 #   elif defined(QPOLARSSL_STATIC)
-#		define QPOLARSSL_API
+#       define QPOLARSSL_API
 #   else
 #       define QPOLARSSL_API __declspec(dllimport)
 #   endif

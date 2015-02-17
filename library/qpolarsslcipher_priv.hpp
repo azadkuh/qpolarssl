@@ -62,6 +62,8 @@ public:
         if ( !isValid() )
             return QByteArray();
 
+        reset();
+
         int nRet = cipher_set_padding_mode(context(), padding);
         if ( nRet != 0 ) {
             qDebug("cipher padding had not been set. error: %d", nRet);
