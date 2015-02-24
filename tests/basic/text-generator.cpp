@@ -15,7 +15,7 @@ namespace test {
 static const char* KFname = "sample-plain.txt";
 
 QByteArray
-createSourceData() {
+createSourceData(size_t size) {
     QByteArray arr;
     // put a lot of test data
     QTextStream stream(&arr);
@@ -23,9 +23,9 @@ createSourceData() {
            << "\nby Amir Zamani <azadkuh@live.com>, @20150209"
            << "\n\nsome more data (to make this file larger than 4KB):\n\n";
 
-    for ( int i = 0;    i < 1000;    i++ ) {
+    for ( size_t i = 0;    i < size;    i++ ) {
         char buffer[33] = {0};
-        snprintf(buffer, 32, "%04d: polarssl\n", i+1);
+        snprintf(buffer, 32, "%04lu: polarssl\n", i+1);
         stream << buffer;
     }
 

@@ -147,14 +147,18 @@ TEST_CASE("polarssl::AES speed test", "[cipher][benchmark]") {
     cipherEnc.setIv(iv);
     cipherDec.setIv(iv);
 
-    auto sourceData = test::createSourceData();
-    auto sourceMd5  = qpolarssl::Hash::hash(sourceData, "MD5");
+    const auto sourceData = test::createSourceData(6000);
+    qDebug("    # %.3f [KB] of sample source has been created.",
+           sourceData.length() / 1024.0
+           );
+    auto sourceHash = qpolarssl::Hash::hash(sourceData, "SHA1");
 
-    const int   KIteration  = 1000;
-    uint64_t    encDuration = 0;
-    uint64_t    decDuration = 0;
-    uint64_t    md5Duration = 0;
+    const int   KIteration   = 1000;
+    uint64_t    encDuration  = 0;
+    uint64_t    decDuration  = 0;
+    uint64_t    hashDuration = 0;
 
+    qDebug("    # iterating %d times ...", KIteration);
     for ( int i = 0;    i < KIteration;    i++ ) {
         auto start      = std::chrono::high_resolution_clock::now();
         auto cipherData = cipherEnc(sourceData);
@@ -169,16 +173,16 @@ TEST_CASE("polarssl::AES speed test", "[cipher][benchmark]") {
                            end - start).count();
 
         start             = std::chrono::high_resolution_clock::now();
-        auto expectedMd5  = qpolarssl::Hash::hash(expectedData, "MD5");
+        auto expectedHash = qpolarssl::Hash::hash(expectedData, "SHA1");
         end               = std::chrono::high_resolution_clock::now();
-        md5Duration += std::chrono::duration_cast<std::chrono::nanoseconds>(
+        hashDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
                            end - start).count();
 
-        REQUIRE( (expectedMd5 == sourceMd5) );
+        REQUIRE( (expectedHash == sourceHash) );
     }
 
-    qDebug("tickings (milliSec): md5 = %.1f , enc = %.1f , dec = %.1f",
-           md5Duration/1e6,
+    qDebug("tickings (milliSec): hash = %.1f , enc = %.1f , dec = %.1f",
+           hashDuration/1e6,
            encDuration/1e6,
            decDuration/1e6
            );
