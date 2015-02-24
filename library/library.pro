@@ -3,8 +3,8 @@ QT       -= gui widget
 
 TARGET    = qpolarssl
 TEMPLATE  = lib
-CONFIG	 += shared
-
+unix:CONFIG   += static
+win32:CONFIG  += shared
 win32:DEFINES += QPOLARSSL_EXPORT
 
 PRJDIR    = ..
