@@ -36,6 +36,7 @@ namespace qpolarssl {
 
     // now plainData is exactly equal to: abcdefghijklmnopqrs
  * @endcode
+ * @sa Cipher::supportsAesNi()
  */
 class QPOLARSSL_API Cipher
 {
@@ -45,6 +46,18 @@ public:
 
     /// checks if the specified (by name) cipher is supported.
     static bool     supports(const char* name);
+
+    /** checks if current build and the CPU supports AESNI.
+     * AESNI is an extension to the x86 instruction set architecture
+     *  for microprocessors from Intel and AMD proposed by Intel in March 2008.
+     *  The purpose of the instruction set is to improve
+     *  the speed of applications performing encryption and decryption using AES.
+     *
+     * @warning QPolarSSL (polarssl) automatically switches to AESNI if detects available
+     *  hardware support for AESNI.
+     * @sa http://en.wikipedia.org/wiki/AES_instruction_set
+     */
+    static bool     supportsAesNi();
 
 public:
     /// constructs a Cipher instance by a cipher type.

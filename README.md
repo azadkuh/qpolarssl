@@ -94,6 +94,10 @@ QByteArray plainData = cipher(encData);
 
 qpolarssl::Cipher blowfish(qpolarssl::TCipher::BLOWFISH_CBC);
 qpolarssl::Cipher triDes("DES-EDE3-CBC");
+
+// checks for hardware accelerated AES support:
+if ( qpolarssl::Cipher::supportsAesNi() )
+    qDebug("this hardware supports AESNI instruction set.");
 ```
 see also: [qpolarsslcipher.hpp](./include/qpolarssl/qpolarsslcipher.hpp)
 

@@ -19,6 +19,8 @@ TEST_CASE("polarssl::Cipher compilation", "[cipher]") {
     REQUIRE( qpolarssl::Cipher::supports(qpolarssl::TCipher::AES_128_CBC) );
     REQUIRE( qpolarssl::Cipher::supports("DES-CBC") );
     REQUIRE( qpolarssl::Cipher::supports("AES-256-ECB") );
+    if ( qpolarssl::Cipher::supportsAesNi() )
+        qDebug("this hardware supports AESNI instruction set.");
 }
 
 TEST_CASE("polarssl::AES and fix hashes", "[cipher][aes]") {

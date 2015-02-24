@@ -2,6 +2,9 @@
 #include "qpolarsslcipher_priv.hpp"
 #include "qpolarssltypes.hpp"
 
+extern "C" {
+#include "polarssl/aesni.h"
+}
 ///////////////////////////////////////////////////////////////////////////////
 namespace qpolarssl {
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,6 +17,15 @@ Cipher::supports(TCipher type) {
 bool
 Cipher::supports(const char *name) {
     return cipher_info_from_string(name) != nullptr;
+}
+
+bool
+Cipher::supportsAesNi() {
+#if defined(POLARSSL_HAVE_X86_64)    &&    defined(POLARSSL_AESNI_C)
+    return aesni_supports(POLARSSL_AESNI_AES) == 1;
+#else
+    return false;
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
