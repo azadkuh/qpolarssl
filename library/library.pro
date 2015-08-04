@@ -4,12 +4,11 @@ QT       -= gui widget
 TARGET    = qpolarssl
 TEMPLATE  = lib
 unix:CONFIG   += static
-win32:CONFIG  += shared
-win32:DEFINES += QPOLARSSL_EXPORT
+win32:CONFIG  += static
 
 PRJDIR    = ..
 include($$PRJDIR/commondir.pri)
-include(polarssl.pri)
+include(mbedtls.pri)
 
 
 
@@ -21,6 +20,10 @@ SOURCES  += \
 
 HEADERS  += \
     qpolarssltypes.hpp \
+    qpolarsslcipher_priv.hpp \
+    qpolarsslhash_priv.hpp \
+    qpolarsslpki_priv.hpp \
+    qpolarsslrandom_priv.hpp \
     ../include/qpolarssl/qpolarsslbase.hpp \
     ../include/qpolarssl/qpolarsslhash.hpp \
     ../include/qpolarssl/qpolarsslcipher.hpp \

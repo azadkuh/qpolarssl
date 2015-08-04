@@ -45,13 +45,13 @@ Hash::hmac(const QByteArray& key,
 bool
 Hash::supports(THash type) {
     auto ptype      = Conversion::toPolar(type);
-    auto minfo      = md_info_from_type(ptype);
+    auto minfo      = mbedtls_md_info_from_type(ptype);
     return minfo != nullptr;
 }
 
 bool
 Hash::supports(const char* name) {
-    auto minfo      = md_info_from_string(name);
+    auto minfo      = mbedtls_md_info_from_string(name);
     return minfo != nullptr;
 }
 

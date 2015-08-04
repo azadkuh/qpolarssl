@@ -2,27 +2,25 @@
 #include "qpolarsslcipher_priv.hpp"
 #include "qpolarssltypes.hpp"
 
-extern "C" {
-#include "polarssl/aesni.h"
-}
+#include "mbedtls/aesni.h"
 ///////////////////////////////////////////////////////////////////////////////
 namespace qpolarssl {
 ///////////////////////////////////////////////////////////////////////////////
 bool
 Cipher::supports(TCipher type) {
-    auto cinfo = cipher_info_from_type(Conversion::toPolar(type));
+    auto cinfo = mbedtls_cipher_info_from_type(Conversion::toPolar(type));
     return cinfo != nullptr;
 }
 
 bool
 Cipher::supports(const char *name) {
-    return cipher_info_from_string(name) != nullptr;
+    return mbedtls_cipher_info_from_string(name) != nullptr;
 }
 
 bool
 Cipher::supportsAesNi() {
-#if defined(POLARSSL_HAVE_X86_64)    &&    defined(POLARSSL_AESNI_C)
-    return aesni_supports(POLARSSL_AESNI_AES) == 1;
+#if defined(MBEDTLS_HAVE_X86_64)    &&    defined(MBEDTLS_AESNI_C)
+    return mbedtls_aesni_supports(MBEDTLS_AESNI_AES) == 1;
 #else
     return false;
 #endif
@@ -57,12 +55,12 @@ Cipher::operator()(const QByteArray& message, TPadding padding) {
 
 int
 Cipher::setEncryptionKey(const QByteArray& key) {
-    return d_ptr->setKey(key, POLARSSL_ENCRYPT);
+    return d_ptr->setKey(key, MBEDTLS_ENCRYPT);
 }
 
 int
 Cipher::setDecryptionKey(const QByteArray& key) {
-    return d_ptr->setKey(key, POLARSSL_DECRYPT);
+    return d_ptr->setKey(key, MBEDTLS_DECRYPT);
 }
 
 int

@@ -136,14 +136,15 @@ class   Pki;
 } // namespace priv
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef Q_OS_WIN
-#   if defined(QPOLARSSL_EXPORT)
-#       define QPOLARSSL_API __declspec(dllexport)
-#   elif defined(QPOLARSSL_STATIC)
-#       define QPOLARSSL_API
-#   else
-#       define QPOLARSSL_API __declspec(dllimport)
+#   if defined(QPOLARSSL_DYNAMIC)
+#       if defined(QPOLARSSL_EXPORT)
+#           define QPOLARSSL_API __declspec(dllexport)
+#       else
+#           define QPOLARSSL_API __declspec(dllimport)
+#       endif
 #   endif
-#include <stdint.h>
+#   define QPOLARSSL_API
+#   include <stdint.h>
 #else
 #   define QPOLARSSL_API
 #endif

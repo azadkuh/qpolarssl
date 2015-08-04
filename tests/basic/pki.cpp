@@ -15,12 +15,12 @@ TEST_CASE("polarssl::Pki test", "[pki][sign]") {
     qDebug("making source file ...");
     const auto sourceData = test::createSourceData();
 
-    const auto priPath = QStringLiteral(":/prikey");
-    const auto pubPath = QStringLiteral(":/pubkey");
+    const auto priPath = QString(":/prikey");
+    const auto pubPath = QString(":/pubkey");
 
     SECTION("sign & verify w/ polarssl") {
         qpolarssl::Pki pki;
-        REQUIRE( (pki.parseKeyFrom(priPath)== 0) );
+        REQUIRE( (pki.parseKeyFrom(priPath) == 0) );
         REQUIRE( pki.isValid() );
 
         const auto polarsslSignature = pki.sign(sourceData, qpolarssl::THash::SHA1);

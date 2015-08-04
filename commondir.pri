@@ -12,7 +12,7 @@ unix {
 win32 {
     TEMPDIR         = $$PRJDIR/tmp/win32/$$TARGET
     CONFIG         += c++11
-    DEFINES        += _WINDOWS WIN32_LEAN_AND_MEAN NOMINMAX
+    DEFINES        += _WINDOWS WIN32_LEAN_AND_MEAN NOMINMAX _CRT_SECURE_NO_WARNINGS
 }
 
 

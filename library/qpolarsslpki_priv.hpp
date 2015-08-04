@@ -8,11 +8,11 @@
   *
  */
 
-#ifndef QPOLARSSL_PKI_PRIV_HPP
-#define QPOLARSSL_PKI_PRIV_HPP
+#ifndef QMBEDTLS_PKI_PRIV_HPP
+#define QMBEDTLS_PKI_PRIV_HPP
 
 #include <QFile>
-#include "polarssl/pk.h"
+#include "mbedtls/pk.h"
 #include "qpolarsslhash_priv.hpp"
 #include "qpolarsslrandom_priv.hpp"
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,57 +22,57 @@ namespace priv {
 class Pki
 {
 public:
-    explicit        Pki(pk_type_t t = POLARSSL_PK_NONE)
-        : Pki(pk_info_from_type(t)) {
+    explicit        Pki(mbedtls_pk_type_t t = MBEDTLS_PK_NONE)
+        : Pki(mbedtls_pk_info_from_type(t)) {
     }
 
-    explicit        Pki(const pk_info_t* pinfo) {
+    explicit        Pki(const mbedtls_pk_info_t* pinfo) {
         if ( pinfo != nullptr ) {
-            itype   = pinfo->type;
-            pk_init_ctx(context(), pinfo);
+            mbedtls_pk_setup(context(), pinfo);
+            itype   = mbedtls_pk_get_type(context());
         } else {
-            pk_init(context());
+            mbedtls_pk_init(context());
         }
     }
 
     virtual        ~Pki() {
-        pk_free(context());
+        mbedtls_pk_free(context());
     }
 
-    auto            context() -> pk_context* {
+    auto            context() -> mbedtls_pk_context* {
         return &ictx;
     }
 
-    auto            context()const -> const pk_context* {
+    auto            context()const -> const mbedtls_pk_context* {
         return &ictx;
     }
 
     bool            isValid()const {
-        return itype != POLARSSL_PK_NONE;
+        return itype != MBEDTLS_PK_NONE;
     }
 
     void            reset() {
-        pk_free(context());
+        mbedtls_pk_free(context());
     }
 
     size_t          keySizeBits()const {
-        return pk_get_size(context());
+        return mbedtls_pk_get_bitlen(context());
     }
 
     size_t          keySizeBytes()const {
-        return pk_get_len(context());
+        return mbedtls_pk_get_len(context());
     }
 
-    bool            canDo(pk_type_t type) {
-        return pk_can_do(context(), type) == 1;
+    bool            canDo(mbedtls_pk_type_t type) {
+        return mbedtls_pk_can_do(context(), type) == 1;
     }
 
-    auto            type()const -> pk_type_t {
-        return pk_get_type(context());
+    auto            type()const -> mbedtls_pk_type_t {
+        return mbedtls_pk_get_type(context());
     }
 
     auto            name()const -> const char* {
-        return pk_get_name(context());
+        return mbedtls_pk_get_name(context());
     }
 
     Random&         random() {
@@ -88,14 +88,14 @@ public:
                                                   );
 
         reset();
-        int nRet = pk_parse_key(context(),
-                                key, keyData.length(),
-                                pwd, password.length()
-                                );
+        int nRet = mbedtls_pk_parse_key(context(),
+                                        key, keyData.length(),
+                                        pwd, password.length()
+                                        );
         if ( nRet != 0 )
             qDebug("pk_parse_key() failed. error: -0x%X", -nRet);
 
-        itype = pk_get_type(context());
+        itype = mbedtls_pk_get_type(context());
 
         return nRet;
     }
@@ -104,13 +104,13 @@ public:
         auto key = reinterpret_cast<const uint8_t*>(keyData.constData());
 
         reset();
-        int nRet = pk_parse_public_key(context(),
-                                       key, keyData.length()
-                                       );
+        int nRet = mbedtls_pk_parse_public_key(context(),
+                                               key, keyData.length()
+                                               );
         if ( nRet != 0 )
             qDebug("pk_parse_public_key() failed. error: -0x%X", -nRet);
 
-        itype = pk_get_type(context());
+        itype = mbedtls_pk_get_type(context());
 
         return nRet;
     }
@@ -136,19 +136,19 @@ public:
 
 public:
     auto            sign(const QByteArray& message,
-                         md_type_t algorithm) -> QByteArray {
+                         mbedtls_md_type_t algorithm) -> QByteArray {
         auto hash = prepare(message, algorithm);
-        uint8_t buffer[POLARSSL_MPI_MAX_SIZE] = {0};
+        uint8_t buffer[MBEDTLS_MPI_MAX_SIZE] = {0};
         size_t  olen = 0;
-        int nRet = pk_sign(context(),
-                           algorithm,
-                           reinterpret_cast<const uint8_t*>(hash.constData()),
-                           0,
-                           buffer,
-                           &olen,
-                           ctr_drbg_random,
-                           irandom.context()
-                           );
+        int nRet = mbedtls_pk_sign(context(),
+                                   algorithm,
+                                   reinterpret_cast<const uint8_t*>(hash.constData()),
+                                   0,
+                                   buffer,
+                                   &olen,
+                                   mbedtls_ctr_drbg_random,
+                                   irandom.context()
+                                   );
 
         if ( nRet != 0 ) {
             qDebug("pk_sign() failed. error: -0x%X", -nRet);
@@ -160,15 +160,15 @@ public:
 
     int             verify(const QByteArray& message,
                            const QByteArray& signature,
-                           md_type_t algorithm) {
+                           mbedtls_md_type_t algorithm) {
         auto hash = prepare(message, algorithm);
-        return pk_verify(context(),
-                         algorithm,
-                         reinterpret_cast<const uint8_t*>(hash.constData()),
-                         0,
-                         reinterpret_cast<const uint8_t*>(signature.constData()),
-                         signature.length()
-                         );
+        return mbedtls_pk_verify(context(),
+                                 algorithm,
+                                 reinterpret_cast<const uint8_t*>(hash.constData()),
+                                 0,
+                                 reinterpret_cast<const uint8_t*>(signature.constData()),
+                                 signature.length()
+                                 );
     }
 
     auto            encrypt(const QByteArray& hash) -> QByteArray {
@@ -177,17 +177,17 @@ public:
             return QByteArray();
         }
 
-        uint8_t buffer[POLARSSL_MPI_MAX_SIZE] = {0};
+        uint8_t buffer[MBEDTLS_MPI_MAX_SIZE] = {0};
         size_t  olen = 0;
-        int nRet = pk_encrypt(context(),
-                              reinterpret_cast<const uint8_t*>(hash.constData()),
-                              hash.length(),
-                              buffer,
-                              &olen,
-                              POLARSSL_MPI_MAX_SIZE,
-                              ctr_drbg_random,
-                              irandom.context()
-                              );
+        int nRet = mbedtls_pk_encrypt(context(),
+                                      reinterpret_cast<const uint8_t*>(hash.constData()),
+                                      hash.length(),
+                                      buffer,
+                                      &olen,
+                                      MBEDTLS_MPI_MAX_SIZE,
+                                      mbedtls_ctr_drbg_random,
+                                      irandom.context()
+                                      );
         if ( nRet != 0 ) {
             qDebug("pk_encrypt() failed. error: -0x%X", -nRet);
             return QByteArray();
@@ -202,16 +202,16 @@ public:
             return QByteArray();
         }
 
-        uint8_t buffer[POLARSSL_MPI_MAX_SIZE] = {0};
+        uint8_t buffer[MBEDTLS_MPI_MAX_SIZE] = {0};
         size_t  olen = 0;
-        int nRet = pk_decrypt(context(),
-                              reinterpret_cast<const uint8_t*>(hash.constData()),
-                              hash.length(),
-                              buffer,
-                              &olen,
-                              POLARSSL_MPI_MAX_SIZE,
-                              ctr_drbg_random,
-                              irandom.context()
+        int nRet = mbedtls_pk_decrypt(context(),
+                                      reinterpret_cast<const uint8_t*>(hash.constData()),
+                                      hash.length(),
+                                      buffer,
+                                      &olen,
+                                      MBEDTLS_MPI_MAX_SIZE,
+                                      mbedtls_ctr_drbg_random,
+                                      irandom.context()
                               );
         if ( nRet != 0 ) {
             qDebug("pk_decrypt() failed. error: -0x%X", -nRet);
@@ -224,15 +224,15 @@ public:
 protected:
     /// checks if the message needs to be converted to a hash.
     auto            prepare(const QByteArray& message,
-                            md_type_t algo)const -> QByteArray {
-        int   maxLength  = pk_get_len(context());
-        return  (message.length() < maxLength   &&  algo == POLARSSL_MD_NONE)
+                            mbedtls_md_type_t algo)const -> QByteArray {
+        int   maxLength  = mbedtls_pk_get_len(context());
+        return  (message.length() < maxLength   &&  algo == MBEDTLS_MD_NONE)
                            ? message : Hash::hash(message, algo);
     }
 
     /// checks if the size of hash is ok for encryption/decryption.
     bool            checkSize(const QByteArray& hash)const {
-        int   maxLength  = pk_get_len(context());
+        int   maxLength  = mbedtls_pk_get_len(context());
         return maxLength >= hash.length();
     }
 
@@ -240,11 +240,11 @@ protected:
     Q_DISABLE_COPY(Pki)
 
     Random              irandom;
-    pk_type_t           itype = POLARSSL_PK_NONE;
-    pk_context          ictx;
+    mbedtls_pk_type_t   itype = MBEDTLS_PK_NONE;
+    mbedtls_pk_context  ictx;
 };
 ///////////////////////////////////////////////////////////////////////////////
 } // namespace priv
 } // namespace qpolarssl
 ///////////////////////////////////////////////////////////////////////////////
-#endif // QPOLARSSL_PKI_PRIV_HPP
+#endif // QMBEDTLS_PKI_PRIV_HPP
