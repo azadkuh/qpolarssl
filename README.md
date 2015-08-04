@@ -13,20 +13,22 @@
 
 
 ## About
-`QPolarSSL` is a thin wrapper (`Qt5` / `c++11`) around [polarssl](https://github.com/polarssl/polarssl) library who implements a wide range of cryptographic algorithms including hashing (message digest), deterministic random bits generator (drbg), ciphers (symmetric) and public-key (asymmetric) infrastructure.
+`QPolarSSL` is a thin wrapper (`Qt5` / `c++11`) around [mbedtls/polarssl](https://github.com/ARMmbed/mbedtls) library who implements a wide range of cryptographic algorithms including hashing (message digest), deterministic random bits generator (drbg), ciphers (symmetric) and public-key (asymmetric) infrastructure.
 
-thanks to efficiency of `polarssl` aka `mbed TLS`, the `QPolarSSL` is less than `210KB` when compiled as a dynamic library (including polarssl). `polarssl` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [polarssl_config.h](./library/polarssl_config.h) and [polarssl.pri](./library/polarssl.pri).
+thanks to efficiency of `mbedtls`, the `QPolarSSL` is less than `270KB` when compiled as a dynamic library (including mbedtls under OSX 10.10). `mbedtls` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [mbedtls_config.h](./library/mbedtls_config.h) and [mbedtls.pri](./library/mbedtls.pri).
+
+> QPolarSSL has been refactored to be compatible with new mbedtls API.
 
 tested platforms:
 
- * Ubuntu 14.04 (64bit, gcc 4.8), Ubuntu 14.10 (32bit gcc 4.8)
- * OSX (10.9 / 10.10, cland 3.5)
- * Windows 7 (64bit - Visual Studio 2013)
+ * Ubuntu 14.04 (64bit, gcc 4.8+), Ubuntu 14.10 (32bit gcc 4.8+)
+ * OSX (10.9 / 10.10, cland 3.5+)
+ * Windows 7/8.1 (64bit - Visual Studio 2013/2015)
 
 [TOC](#table-of-contents)
 
 ## Features
-at the moment current features from `polarssl` are included in *default build* of `QPolarSSL`:
+at the moment current features from `mbedtls` are included in *default build* of `QPolarSSL`:
 
 ### Hash & HMAC
 creating message-digest and HMAC:
@@ -107,13 +109,13 @@ a combination of following modes are included in default build:
 * `DES` and `3DES`
 * `BLOWFISH`
 * `ECB` (Electronic Code Book) and `CBC` (Cipher Block Chaining) modes
-* `PKCS7` and other `polarssl` paddings.
+* `PKCS7` and other `mbedtls` paddings.
 
 [TOC](#table-of-contents)
 
 
 ### Random
-`Random` is a class based on `polarssl`'s [ctr-drbg / entrpoy](https://polarssl.org/module-level-design-rng), can be used to generate random numbers and buffers:
+`Random` is a class based on `mbedtls`'s [ctr-drbg / entrpoy](https://tls.mbed.org/module-level-design-rng), can be used to generate random numbers and buffers:
 ```cpp
 qpolarssl::Random rnd(QByteArray("my custom, optional intializer!");
 
@@ -189,7 +191,7 @@ to [library.pro](./library/library.pro).
 dependecies:
 
 * [Qt 5](http://www.qt.io/download)
-* [polarssl](https://github.com/azadkuh/qpolarssl) aka `mbed TSL`.
+* [mbedtls site](https://tls.mbed.org/)
 * [Catch](https://github.com/philsquared/Catch) only for unit testings.
 
 [TOC](#table-of-contents)
