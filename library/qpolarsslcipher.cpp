@@ -20,7 +20,7 @@ Cipher::supports(const char *name) {
 bool
 Cipher::supportsAesNi() {
 #if defined(MBEDTLS_HAVE_X86_64)    &&    defined(MBEDTLS_AESNI_C)
-    return mbedtls_aesni_supports(MBEDTLS_AESNI_AES) == 1;
+    return mbedtls_aesni_has_support(MBEDTLS_AESNI_AES) == 1;
 #else
     return false;
 #endif

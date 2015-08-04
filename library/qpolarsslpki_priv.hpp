@@ -120,7 +120,7 @@ public:
         QFile f(filePath);
         QByteArray keyData;
         if ( f.open(QFile::ReadOnly) )
-            keyData = f.readAll();
+            keyData = f.readAll().append('\0');
 
         return parseKey(keyData, password);
     }
@@ -129,7 +129,7 @@ public:
         QFile f(filePath);
         QByteArray keyData;
         if ( f.open(QFile::ReadOnly) )
-            keyData = f.readAll();
+            keyData = f.readAll().append('\0');
 
         return parsePublicKey(keyData);
     }
