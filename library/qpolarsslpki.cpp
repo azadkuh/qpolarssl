@@ -47,12 +47,12 @@ Pki::name()const {
 
 int
 Pki::parseKey(const QByteArray& keyData, const QByteArray& password) {
-    return d_ptr->parseKey(keyData, password);
+    return d_ptr->parseKey(QByteArray(keyData), password);
 }
 
 int
 Pki::parsePublicKey(const QByteArray& keyData) {
-    return d_ptr->parsePublicKey(keyData);
+    return d_ptr->parsePublicKey(QByteArray(keyData));
 }
 
 int

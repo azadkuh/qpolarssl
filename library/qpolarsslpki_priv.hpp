@@ -80,8 +80,12 @@ public:
     }
 
 public:
-    int             parseKey(const QByteArray& keyData,
+    int             parseKey(QByteArray&& keyData,
                              const QByteArray& password = QByteArray()) {
+        // new mbedtls pk_parse_key needs null-terminated data
+        if ( !keyData.endsWith('\0') )
+            keyData.append('\0');
+
         auto key = reinterpret_cast<const uint8_t*>(keyData.constData());
         auto pwd = reinterpret_cast<const uint8_t*>(
                        (password.length() > 0 ) ? password.constData() : nullptr
@@ -100,7 +104,11 @@ public:
         return nRet;
     }
 
-    int             parsePublicKey(const QByteArray& keyData) {
+    int             parsePublicKey(QByteArray&& keyData) {
+        // new mbedtls pk_parse_key needs null-terminated data
+        if ( !keyData.endsWith('\0') )
+            keyData.append('\0');
+
         auto key = reinterpret_cast<const uint8_t*>(keyData.constData());
 
         reset();
@@ -120,18 +128,18 @@ public:
         QFile f(filePath);
         QByteArray keyData;
         if ( f.open(QFile::ReadOnly) )
-            keyData = f.readAll().append('\0');
+            keyData = f.readAll();
 
-        return parseKey(keyData, password);
+        return parseKey(std::move(keyData), password);
     }
 
     int             parsePublicKeyFrom(const QString& filePath) {
         QFile f(filePath);
         QByteArray keyData;
         if ( f.open(QFile::ReadOnly) )
-            keyData = f.readAll().append('\0');
+            keyData = f.readAll();
 
-        return parsePublicKey(keyData);
+        return parsePublicKey(std::move(keyData));
     }
 
 public:
