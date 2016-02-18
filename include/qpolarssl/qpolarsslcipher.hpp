@@ -59,6 +59,26 @@ public:
      */
     static bool     supportsAesNi();
 
+    /// encryptor helper function
+    static auto     encrypt(TCipher type,
+            const QByteArray& iv, const QByteArray& key,
+            const QByteArray& plain) -> QByteArray {
+        Cipher cp(type);
+        cp.setIv(iv);
+        cp.setEncryptionKey(key);
+        return cp(plain);
+    }
+
+    /// decryptor helper function
+    static auto     decrypt(TCipher type,
+            const QByteArray& iv, const QByteArray& key,
+            const QByteArray& cipher) -> QByteArray {
+        Cipher cp(type);
+        cp.setIv(iv);
+        cp.setDecryptionKey(key);
+        return cp(cipher);
+    }
+
 public:
     /// constructs a Cipher instance by a cipher type.
     explicit        Cipher(TCipher t);
