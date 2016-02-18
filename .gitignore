@@ -7,6 +7,13 @@ res/keys
 res/
 TODO.md
 
+# vim ctags
+tags
+.vimrc
+
+# you complete me
+.ycm_extra_conf.*
+
 # ahh! OSX finder!
 .directory
 .DS_Store
