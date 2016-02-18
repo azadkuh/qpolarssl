@@ -16,14 +16,14 @@
 ## About
 `QPolarSSL` is a thin wrapper (`Qt5` / `c++11`) around [mbedtls](https://github.com/ARMmbed/mbedtls) (formerly known as PolarSSL) library who implements a wide range of cryptographic algorithms including hashing (message digest), deterministic random bits generator (drbg), ciphers (symmetric) and public-key (asymmetric) infrastructure.
 
-thanks to efficiency of `mbedtls`, the `QPolarSSL` is less than `270KB` when compiled as a dynamic library (including mbedtls under OSX 10.11). `mbedtls` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [mbedtls_config.h](./library/mbedtls_config.h) and [mbedtls.pri](./library/mbedtls.pri).
+Thanks to efficiency of `mbedtls`, the `QPolarSSL` is less than `270KB` when compiled as a dynamic library (including mbedtls under OS X 10.11). `mbedtls` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [mbedtls_config.h](./library/mbedtls_config.h) and [mbedtls.pri](./library/mbedtls.pri).
 
 > QPolarSSL has been refactored to be compatible with new mbedtls API.
 
-tested platforms:
+Tested platforms:
 
  * Ubuntu 14.04 (64bit, gcc 4.8+, 5.2+), Ubuntu 14.10 (32bit gcc 4.8+)
- * OSX (10.9 / 10.10 / 10.11, cland 3.5+)
+ * OS X (10.9 / 10.10 / 10.11, clang 3.5+)
  * Windows 7/8.1 (64bit - Visual Studio 2013/2015)
 
 [TOC](#table-of-contents)
@@ -45,8 +45,8 @@ following features are included in `QPolarSSL` by *default build*:
     - `ECB` (Electronic Code Book) and `CBC` (Cipher Block Chaining) modes
     - `PKCS7` and other `mbedtls` paddings.
 * **Random** generators by `ctr-drbg` / `entrpoy` from mbedtls
-* **PKI** 
-    - RSA
+* **PKI**
+    - `RSA`
 
 ## Usage
 
@@ -88,11 +88,11 @@ see also: [qpolarsslhash.hpp](./include/qpolarssl/qpolarsslhash.hpp)
 
 [TOC](#table-of-contents)
 
-### Cihper
+### Cipher
 symmetric encryption/decryption:
 ```cpp
-// first assigs the key and iv (initial vector)
-QByteArray key = ...; 
+// first assign the key and the iv (initial vector)
+QByteArray key = ...;
 QByteArray iv  = ...;
 // key / iv length depends on cipher algorithm
 
@@ -144,7 +144,7 @@ see also: [qpolarsslrandom.hpp](./include/qpolarssl/qpolarsslrandom.hpp)
 
 
 ### Pki
-The asymmetric encryptrion algorithms are accessible via the generic public key layer:
+The asymmetric encryption algorithms are accessible via the generic public key layer:
 ```cpp
 // sign and verify data
 qpolarssl::Pki pki;
