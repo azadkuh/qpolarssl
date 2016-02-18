@@ -62,21 +62,21 @@ public:
     /// encryptor helper function
     static auto     encrypt(TCipher type,
             const QByteArray& iv, const QByteArray& key,
-            const QByteArray& plain) -> QByteArray {
+            const QByteArray& plain,
+            TPadding pd = TPadding::PKCS7) -> QByteArray {
         Cipher cp(type);
-        cp.setIv(iv);
-        cp.setEncryptionKey(key);
-        return cp(plain);
+        return ( cp.setIv(iv) == 0   &&   cp.setEncryptionKey(key) == 0 )
+            ? cp(plain, pd) : QByteArray();
     }
 
     /// decryptor helper function
     static auto     decrypt(TCipher type,
             const QByteArray& iv, const QByteArray& key,
-            const QByteArray& cipher) -> QByteArray {
+            const QByteArray& cipher,
+            TPadding pd = TPadding::PKCS7) -> QByteArray {
         Cipher cp(type);
-        cp.setIv(iv);
-        cp.setDecryptionKey(key);
-        return cp(cipher);
+        return ( cp.setIv(iv) == 0   &&   cp.setDecryptionKey(key) == 0 )
+            ? cp(cipher, pd) : QByteArray();
     }
 
 public:
@@ -113,8 +113,11 @@ public:
     /** makes the cipher (encrypt or decrypt) for a chunk of data
      * @code
         Cipher cp("AES-256-CBC");
-        cp.setIv(iv);
-        cp.setEncryptionKey(key);
+        if ( cp.setIv(iv) != 0   ||   cp.setEncryptionKey(key) != 0 ) {
+            // wrong iv/key for this algorithm
+            // throw or report the error
+            return;
+        }
 
         cp.start();
         while ( thereIsMoreData() ) {
@@ -133,12 +136,15 @@ public:
 
 public:
     /// set the Cipher key for encryption.
+    /// returns 0 as success, error code when fails.
     int             setEncryptionKey(const QByteArray& key);
 
     /// set the Cipher key for decryption.
+    /// returns 0 as success, error code when fails.
     int             setDecryptionKey(const QByteArray& key);
 
     /// set the IV (aka nonce) of the Cipher message.
+    /// returns 0 as success, error code when fails.
     int             setIv(const QByteArray& nonce);
 
 protected:

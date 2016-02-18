@@ -155,20 +155,30 @@ public:
 
 public:
     int setKey(const QByteArray& key, mbedtls_operation_t operation = MBEDTLS_ENCRYPT) {
-        return mbedtls_cipher_setkey(
+        int nRet = mbedtls_cipher_setkey(
                 context(),
                 reinterpret_cast<const uint8_t*>(key.constData()),
                 key.length() << 3, // in bit
                 operation
                 );
+
+        if ( nRet != 0 )
+            qDebug("cipher_setkey failed. error: %d", nRet);
+
+        return nRet;
     }
 
     int setIv(const QByteArray& nonce) {
-        return mbedtls_cipher_set_iv(
+        int nRet = mbedtls_cipher_set_iv(
                 context(),
                 reinterpret_cast<const uint8_t*>(nonce.constData()),
                 nonce.length()
                 );
+
+        if ( nRet != 0 )
+            qDebug("cipher_setiv failed. error: %d", nRet);
+
+        return nRet;
     }
 
 protected:
