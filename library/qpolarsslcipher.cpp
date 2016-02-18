@@ -48,9 +48,24 @@ Cipher::isValid()const {
 
 QByteArray
 Cipher::operator()(const QByteArray& message, TPadding padding) {
-    return d_ptr->operator ()(message,
-                              Conversion::toPolar(padding)
-                              );
+    return d_ptr->operator ()(
+            message, Conversion::toPolar(padding)
+            );
+}
+
+bool
+Cipher::start(TPadding padding) {
+    return d_ptr->start(Conversion::toPolar(padding));
+}
+
+QByteArray
+Cipher::update(const QByteArray& chunk) {
+    return d_ptr->update(chunk);
+}
+
+QByteArray
+Cipher::finish() {
+    return d_ptr->finish();
 }
 
 int

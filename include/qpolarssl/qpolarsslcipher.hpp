@@ -103,6 +103,34 @@ public:
      */
     auto            operator()(const QByteArray& message,
                                TPadding padding = TPadding::PKCS7) -> QByteArray;
+
+    /** resets and prepares the object for update() iterations.
+     * @warning to restart a cipher operation, the IV must be re-assigned.
+     * @sa update(), finish()
+     */
+    bool            start(TPadding padding = TPadding::PKCS7);
+
+    /** makes the cipher (encrypt or decrypt) for a chunk of data
+     * @code
+        Cipher cp("AES-256-CBC");
+        cp.setIv(iv);
+        cp.setEncryptionKey(key);
+
+        cp.start();
+        while ( thereIsMoreData() ) {
+            QByteArray source = readSomePlainData();
+            auto cipheredData = cp.update(source);
+            writeCipheredData(cipheredData);
+        }
+        // finalization and paddings
+        writeCipheredData(cp.finish());
+     * @endcode
+     */
+    auto            update(const QByteArray& chunk) -> QByteArray;
+
+    /// finishes and finalize the cipher, adds the paddings, ...
+    auto            finish() -> QByteArray;
+
 public:
     /// set the Cipher key for encryption.
     int             setEncryptionKey(const QByteArray& key);
