@@ -90,6 +90,82 @@ TEST_CASE("polarssl::AES and fix hashes", "[cipher][aes]") {
     }
 }
 
+TEST_CASE("polarssl::AES incremental", "[cipher][aes]") {
+    const auto aes_mode  = qpolarssl::TCipher::AES_256_CBC;
+    const auto hash_mode = qpolarssl::THash::SHA1;
+    const QByteArray key(32, 'a');
+    const QByteArray iv(16,  'z');
+
+    const QByteArray sourceData = test::createSourceData(10000);
+
+    // encrypt in one shot
+    auto oneShot = [&]() {
+        auto encryptedData = qpolarssl::Cipher::encrypt(
+                aes_mode, iv, key, sourceData
+                );
+        REQUIRE( encryptedData.length() > 0 );
+
+        return std::make_tuple(
+                qpolarssl::Hash::hash(sourceData,    hash_mode),
+                qpolarssl::Hash::hash(encryptedData, hash_mode),
+                encryptedData
+                );
+    }();
+
+    qpolarssl::Hash sha1(hash_mode);
+    constexpr int ChunkSize = 4096;
+    qpolarssl::Cipher polar(aes_mode);
+
+    // encrypt incrementally
+    polar.setIv(iv);
+    polar.setEncryptionKey(key);
+
+    auto iterativeSha1 = [&]() -> QByteArray {
+        sha1.start();
+        polar.start();
+        const int sourceLength = sourceData.length();
+
+        for ( int offset = 0;  offset < sourceLength;  offset += ChunkSize ) {
+            int length = std::min(ChunkSize, sourceLength - offset);
+            auto enc   = polar.update(QByteArray::fromRawData(
+                        sourceData.data() + offset, length
+                        ));
+
+            REQUIRE( enc.length() > 0 );
+            sha1.update(enc);
+        }
+        // finish cipher context, add paddings, ...
+        sha1.update(polar.finish());
+        return sha1.finish();
+    }();
+    REQUIRE( (iterativeSha1 == std::get<1>(oneShot)) );
+
+    // decrypt incrementally
+    polar.reset();
+    polar.setIv(iv);
+    polar.setDecryptionKey(key);
+    iterativeSha1 = [&](const QByteArray& data) {
+        sha1.start();
+        polar.start();
+        const int dataLength = data.length();
+
+        for ( int offset = 0;  offset < dataLength;  offset += ChunkSize ) {
+            int length = std::min(ChunkSize, dataLength - offset);
+            auto plain = polar.update(QByteArray::fromRawData(
+                        data.data() + offset, length
+                        ));
+
+            REQUIRE( plain.length() > 0 );
+            sha1.update(plain);
+        }
+        // finalize cipher context, ...
+        sha1.update(polar.finish());
+        return sha1.finish();
+    }(std::get<2>(oneShot));
+
+    REQUIRE( (iterativeSha1 == std::get<0>(oneShot)) );
+}
+
 TEST_CASE("polarssl::AES to file", "[cipher][aes]") {
     QByteArray sourceData = test::createSourceData();
     test::createSourceFile(sourceData);
