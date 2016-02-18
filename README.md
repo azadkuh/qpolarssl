@@ -3,6 +3,7 @@
 ## Table of contents
 - [About](#about)
 - [Features](#features)
+- [Usage](#usage)
     - [Hash](#hash)
     - [Cipher](#cipher)
     - [Random](#random)
@@ -13,22 +14,41 @@
 
 
 ## About
-`QPolarSSL` is a thin wrapper (`Qt5` / `c++11`) around [mbedtls/polarssl](https://github.com/ARMmbed/mbedtls) library who implements a wide range of cryptographic algorithms including hashing (message digest), deterministic random bits generator (drbg), ciphers (symmetric) and public-key (asymmetric) infrastructure.
+`QPolarSSL` is a thin wrapper (`Qt5` / `c++11`) around [mbedtls](https://github.com/ARMmbed/mbedtls) (formerly known as PolarSSL) library who implements a wide range of cryptographic algorithms including hashing (message digest), deterministic random bits generator (drbg), ciphers (symmetric) and public-key (asymmetric) infrastructure.
 
-thanks to efficiency of `mbedtls`, the `QPolarSSL` is less than `270KB` when compiled as a dynamic library (including mbedtls under OSX 10.10). `mbedtls` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [mbedtls_config.h](./library/mbedtls_config.h) and [mbedtls.pri](./library/mbedtls.pri).
+thanks to efficiency of `mbedtls`, the `QPolarSSL` is less than `270KB` when compiled as a dynamic library (including mbedtls under OSX 10.11). `mbedtls` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [mbedtls_config.h](./library/mbedtls_config.h) and [mbedtls.pri](./library/mbedtls.pri).
 
 > QPolarSSL has been refactored to be compatible with new mbedtls API.
 
 tested platforms:
 
- * Ubuntu 14.04 (64bit, gcc 4.8+), Ubuntu 14.10 (32bit gcc 4.8+)
- * OSX (10.9 / 10.10, cland 3.5+)
+ * Ubuntu 14.04 (64bit, gcc 4.8+, 5.2+), Ubuntu 14.10 (32bit gcc 4.8+)
+ * OSX (10.9 / 10.10 / 10.11, cland 3.5+)
  * Windows 7/8.1 (64bit - Visual Studio 2013/2015)
 
 [TOC](#table-of-contents)
 
 ## Features
-at the moment current features from `mbedtls` are included in *default build* of `QPolarSSL`:
+following features are included in `QPolarSSL` by *default build*:
+
+* **Hash algorithms:**
+    - `MD4`
+    - `MD5`
+    - `SHA1`
+    - `SHA256`, `SHA224`
+    - `SHA512` , `SHA384`
+    - `HAMC`
+* **Ciphers:**
+    - `AES` and `AES-NI` (128, 192 and 256)
+    - `DES` and `3DES`
+    - `BLOWFISH`
+    - `ECB` (Electronic Code Book) and `CBC` (Cipher Block Chaining) modes
+    - `PKCS7` and other `mbedtls` paddings.
+* **Random** generators by `ctr-drbg` / `entrpoy` from mbedtls
+* **PKI** 
+    - RSA
+
+## Usage
 
 ### Hash & HMAC
 creating message-digest and HMAC:
@@ -65,51 +85,41 @@ auto hmacSha1 = qpolarssl::Hash::hmac(key, message, "SHA1");
 ```
 see also: [qpolarsslhash.hpp](./include/qpolarssl/qpolarsslhash.hpp)
 
-list of supported hash algorithms (in default build):
-
-* `MD4`
-* `MD5`
-* `SHA1`
-* `SHA256`, `SHA224`
-* `SHA512` , `SHA384`
-* `HAMC`
 
 [TOC](#table-of-contents)
 
 ### Cihper
 symmetric encryption/decryption:
 ```cpp
-QByteArray key      = getFromSomewhere();
-QByteArray nonce    = getFromSomewhereElse();
+// first assigs the key and iv (initial vector)
+QByteArray key = ...; 
+QByteArray iv  = ...;
+// key / iv length depends on cipher algorithm
 
-qpolarssl::Cipher cipher("AES-128-CBC");
-cipher.setEncryptionKey(key);
-cipher.setIv(nonce);
-// do encryption
-QByteArray encData = cipher("abcdefghijklmnopqrs");
+// do the encryption in one function call
+QByteArray source  = ...; // source/plain data
+QByteArray encData = qpolarssl::Cipher::encrypt(
+    qpolarssl::TCipher::AES_256_CBC, iv, key, source
+    );
 
-cipher.reset();
+// decryption
+qpolarssl::Cipher cipher("AES-256-CBC"); // by name
 cipher.setDecryptionKey(key);
-cipher.setIv(nonce);
-// do decryption
-QByteArray plainData = cipher(encData);
+cipher.setIv(iv);
+auto plainData = cipher(encData);
 
+REQUIRE( plainData == source );
+
+// other cipher algorithms:
 qpolarssl::Cipher blowfish(qpolarssl::TCipher::BLOWFISH_CBC);
 qpolarssl::Cipher triDes("DES-EDE3-CBC");
+// ...
 
-// checks for hardware accelerated AES support:
+// checks for hardware accelerated AES support (hardware acceleration):
 if ( qpolarssl::Cipher::supportsAesNi() )
     qDebug("this hardware supports AESNI instruction set.");
 ```
 see also: [qpolarsslcipher.hpp](./include/qpolarssl/qpolarsslcipher.hpp)
-
-a combination of following modes are included in default build:
-
-* `AES` and `AES-NI` (128, 192 and 256)
-* `DES` and `3DES`
-* `BLOWFISH`
-* `ECB` (Electronic Code Book) and `CBC` (Cipher Block Chaining) modes
-* `PKCS7` and other `mbedtls` paddings.
 
 [TOC](#table-of-contents)
 
@@ -138,16 +148,13 @@ The asymmetric encryptrion algorithms are accessible via the generic public key 
 ```cpp
 // sign and verify data
 qpolarssl::Pki pki;
-pki.parseKeyFrom(priPath);
-
-const auto polarsslSignature = pki.sign(sourceData, qpolarssl::THash::SHA1);
+pki.parseKeyFrom(priKeyFilePath);
+const auto signature = pki.sign(sourceData, qpolarssl::THash::SHA1);
 
 qpolarssl::Pki pkipub;
-pkipub.parsePublicKeyFrom(pubPath);
-
-int nRet = pkipub.verify(sourceData, polarsslSignature, qpolarssl::THash::SHA1);
-if ( nRet != 0 )
-    qDebug("verification failed: -0x%X", -nRet);
+pkipub.parsePublicKeyFrom(pubKeyFilePath);
+int nRet = pkipub.verify(sourceData, signature, qpolarssl::THash::SHA1);
+REQUIRE( nRet == 0 );
 
 
 // encrypt and decrypt data
@@ -165,8 +172,6 @@ REQUIRE( (decData == hash) );
 
 ```
 see also: [qpolarsslrandom.hpp](./include/qpolarssl/qpolarsslrandom.hpp)
-
-at the moment `RSA` is included in `QPolarSSL` by default.
 
 [TOC](#table-of-contents)
 
@@ -191,7 +196,7 @@ to [library.pro](./library/library.pro).
 dependecies:
 
 * [Qt 5](http://www.qt.io/download)
-* [mbedtls site](https://tls.mbed.org/)
+* [mbedtls](https://tls.mbed.org/)
 * [Catch](https://github.com/philsquared/Catch) only for unit testings.
 
 [TOC](#table-of-contents)
