@@ -18,7 +18,7 @@
 
 Thanks to efficiency of `mbedtls`, the `QPolarSSL` is less than `270KB` when compiled as a dynamic library (including mbedtls under OS X 10.11). `mbedtls` is highly configurable, so adding/removing features and algorithms into/from `QPolarSSL` is quite easy, simply tweak  [mbedtls_config.h](./library/mbedtls_config.h) and [mbedtls.pri](./library/mbedtls.pri).
 
-> QPolarSSL has been refactored to be compatible with new mbedtls API.
+> for a pure `c++11/14` cryptography (without `Qt`) library, see sister project: [mbedcrypto](https://github.com/azadkuh/mbedcrypto)
 
 Tested platforms:
 
